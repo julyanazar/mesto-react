@@ -1,10 +1,15 @@
 import React from 'react';
 
-function Card({card}) {
+function Card({ card, onCardClick }) {
+
+    function handleClick() {
+        onCardClick(card);
+    }
+
     return (
         <li className="element">
             <div className="element__cover">
-                <img src={card.link} alt={card.name} className="element__img" />
+                <img src={card.link} alt={card.name} className="element__img" onClick={handleClick} />
             </div>
             <button className="element__trash-button" type="button" aria-label="удалить каточку"></button>
             <div className="element__caption">

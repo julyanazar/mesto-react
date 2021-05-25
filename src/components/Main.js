@@ -3,7 +3,7 @@ import Card from './Card';
 import editAvatar from '../images/profile-avatar-edit.svg';
 import api from '../utils/api.js';
 
-function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
+function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
 
     const [userName, setUserName] = React.useState();
     const [userDescription, setUserDescription] = React.useState();
@@ -48,7 +48,11 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
 
             <section className="elements content__section">
                 <ul className="elements__items">
-                {cards.map((card) => <Card  key={card._id} card={card} />)}
+                    {cards.map((card) => 
+                    <Card 
+                    key={card._id} 
+                    card={card} 
+                    onCardClick={onCardClick} />)}
                 </ul>
             </section>
         </main>

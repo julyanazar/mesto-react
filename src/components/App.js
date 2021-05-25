@@ -9,28 +9,43 @@ function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+    const [selectedCard, setSelectedCard] = React.useState(false);
+
+    function handleEditProfileClick() {
+        setIsEditProfilePopupOpen(true);
+    }
 
     function handleEditAvatarClick() {
         setIsEditAvatarPopupOpen(true);
     }
-    function handleEditProfileClick() {
-        setIsEditProfilePopupOpen(true);
-    }
+
     function handleAddPlaceClick() {
         setIsAddPlacePopupOpen(true);
+    }
+
+    function handleCardClick(card) {
+        setSelectedCard(card);
     }
 
     function closeAllPopups() {
         setIsEditAvatarPopupOpen(false);
         setIsEditProfilePopupOpen(false);
         setIsAddPlacePopupOpen(false);
+        setSelectedCard(false);
     }
 
     return (
-        <div className='page'>
-            <Header />
-            <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} />
-            <Footer />
+        <>
+            <div className='page'>
+                <Header />
+                <Main
+                    onEditProfile={handleEditProfileClick}
+                    onAddPlace={handleAddPlaceClick}
+                    onEditAvatar={handleEditAvatarClick}
+                    onCardClick={handleCardClick} />
+                <Footer />
+            </div>
+
             <PopupWithForm
                 name="edit"
                 title="Редактировать профиль"
@@ -76,31 +91,11 @@ function App() {
                 </fieldset>
             </PopupWithForm>
 
-            <ImagePopup />
+            <ImagePopup
+                card={selectedCard}
+                onClose={closeAllPopups} />
 
-            {/* 
-
-            <div className="popup popup_zoom_img">
-                <div className="popup__container">
-                    <img src="#" className="popup__img" alt="#" />
-                    <h3 className="popup__caption">Новое место</h3>
-                    <button className="popup__close-button" type="button"
-                        aria-label="закрыть окно приближения изображения карточки"></button>
-                </div>
-            </div>
-
-            <div className="popup popup_delete_card">
-                <div className="popup__container">
-                    <h2 className="popup__title">Вы уверены?</h2>
-                    <form className="form form_delete" name="delete-card" noValidate>
-                        <button type="submit" className="form__save-button">Да</button>
-                        <button type="button" className="popup__close-button"
-                            aria-label="закрыть окно подтверждения удаления"></button>
-                    </form>
-                </div>
-            </div> */}
-
-        </div>
+        </>
     );
 }
 

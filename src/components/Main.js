@@ -1,4 +1,5 @@
 import React from 'react';
+import Card from './Card';
 import editAvatar from '../images/profile-avatar-edit.svg';
 import api from '../utils/api.js';
 
@@ -7,15 +8,21 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
     const [userName, setUserName] = React.useState();
     const [userDescription, setUserDescription] = React.useState();
     const [userAvatar, setUserAvatar] = React.useState();
+    const [cards, setCards] = React.useState([]);
 
     React.useEffect(() => {
+
         api.getUserInfo().then((data) => {
-          setUserName(data.name);
-          setUserDescription(data.about);
-          setUserAvatar(data.avatar)
+            setUserName(data.name);
+            setUserDescription(data.about);
+            setUserAvatar(data.avatar)
         });
 
-      }, []);
+        api.getInitialCards().then(cardList => {
+            setCards(cardList);
+        });
+
+    }, []);
 
     return (
         <main className="content">
@@ -40,7 +47,9 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar }) {
             </section>
 
             <section className="elements content__section">
-                <ul className="elements__items"></ul>
+                <ul className="elements__items">
+                {cards.map((card) => <Card  key={card._id} card={card} />)}
+                </ul>
             </section>
         </main>
     );

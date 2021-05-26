@@ -12,16 +12,15 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
 
     React.useEffect(() => {
 
-        api.getUserInfo().then((data) => {
-            setUserName(data.name);
-            setUserDescription(data.about);
-            setUserAvatar(data.avatar)
-        });
-
-        api.getInitialCards().then(cardList => {
-            setCards(cardList);
-        });
-
+        api.getInitialData()
+            .then((arg) => {
+                const [dataUserInfo, dataCards] = arg;
+                setUserName(dataUserInfo.name);
+                setUserDescription(dataUserInfo.about);
+                setUserAvatar(dataUserInfo.avatar)
+                setCards(dataCards);
+            })
+            .catch(err => { console.log(err) });
     }, []);
 
     return (

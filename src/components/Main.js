@@ -14,11 +14,11 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
 
         api.getInitialData()
             .then((arg) => {
-                const [dataUserInfo, dataCards] = arg;
-                setUserName(dataUserInfo.name);
-                setUserDescription(dataUserInfo.about);
-                setUserAvatar(dataUserInfo.avatar)
-                setCards(dataCards);
+                const [userData, cardList] = arg;
+                setUserName(userData.name);
+                setUserDescription(userData.about);
+                setUserAvatar(userData.avatar)
+                setCards(cardList);
             })
             .catch(err => { console.log(err) });
     }, []);

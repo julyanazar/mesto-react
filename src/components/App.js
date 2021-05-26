@@ -49,6 +49,7 @@ function App() {
             <PopupWithForm
                 name="edit"
                 title="Редактировать профиль"
+                buttonText="Сохранить"
                 isOpen={isEditProfilePopupOpen}
                 onClose={closeAllPopups}>
                 <fieldset className="form__inputs">
@@ -58,13 +59,13 @@ function App() {
                     <input id="form_edit-about" className="form__input form__input-about" type="text" name="about"
                         minLength="2" maxLength="200" required placeholder="О себе" />
                     <span id="form_edit-about-error" className="form__error"></span>
-                    <button type="submit" className="form__save-button" defaultValue="Сохранить" name="submit">Сохранить</button>
                 </fieldset>
             </PopupWithForm>
 
             <PopupWithForm
                 name="add"
                 title="Новое место"
+                buttonText="Создать"
                 isOpen={isAddPlacePopupOpen}
                 onClose={closeAllPopups}>
                 <fieldset className="form__inputs">
@@ -74,20 +75,19 @@ function App() {
                     <input id="form_add-about" className="form__input form__input-src" type="url" name="about" required
                         placeholder="Ссылка на картинку" />
                     <span id="form_add-about-error" className="form__error"></span>
-                    <button type="submit" className="form__save-button" defaultValue="Создать" name="submit">Создать</button>
                 </fieldset>
             </PopupWithForm>
 
             <PopupWithForm
                 name="avatar"
                 title="Обновить аватар"
+                buttonText="Сохранить"
                 isOpen={isEditAvatarPopupOpen}
                 onClose={closeAllPopups}>
                 <fieldset className="form__inputs">
                     <input id="form_avatar-edit" className="form__input form__input-link-avatar" type="url"
                         name="avatar-input" placeholder="Ссылка на картинку" required />
                     <span id="form_avatar-edit-error" className="form__error"></span>
-                    <button type="submit" className="form__save-button" defaultValue="Сохранить" name="submit">Сохранить</button>
                 </fieldset>
             </PopupWithForm>
 

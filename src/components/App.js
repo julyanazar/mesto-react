@@ -4,6 +4,7 @@ import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import EditProfilePopup from './EditProfilePopup';
 import api from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
@@ -47,6 +48,19 @@ function App() {
         setSelectedCard(null);
     }
 
+    function handleUpdateUser({ name, about }) {
+        api.editUserInfo(name, about)
+            .then(() => {
+                const updatedUser = { ...currentUser };
+                updatedUser.name = name;
+                updatedUser.about = about;
+
+                setCurrentUser({ ...updatedUser });
+                setIsEditProfilePopupOpen(false);
+            })
+            .catch(err => { console.log(err) });
+    }
+
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <div className='page'>
@@ -61,21 +75,11 @@ function App() {
                 <Footer />
             </div>
 
-            <PopupWithForm
-                name="edit"
-                title="Редактировать профиль"
-                buttonText="Сохранить"
+            {currentUser && <EditProfilePopup
                 isOpen={isEditProfilePopupOpen}
-                onClose={closeAllPopups}>
-                <fieldset className="form__inputs">
-                    <input id="form_edit-name" className="form__input form__input-name" type="text" name="name"
-                        minLength="2" maxLength="40" required placeholder="Имя" />
-                    <span id="form_edit-name-error" className="form__error"></span>
-                    <input id="form_edit-about" className="form__input form__input-about" type="text" name="about"
-                        minLength="2" maxLength="200" required placeholder="О себе" />
-                    <span id="form_edit-about-error" className="form__error"></span>
-                </fieldset>
-            </PopupWithForm>
+                onClose={closeAllPopups}
+                onUpdateUser={handleUpdateUser} />
+            }
 
             <PopupWithForm
                 name="add"

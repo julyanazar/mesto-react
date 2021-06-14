@@ -2,10 +2,10 @@ import React from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 import api from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
@@ -17,6 +17,8 @@ function App() {
 
     const [currentUser, setCurrentUser] = React.useState();
 
+    const [cards, setCards] = React.useState([]);
+
     React.useEffect(() => {
 
         api.getUserInfo()
@@ -25,6 +27,33 @@ function App() {
             })
             .catch(err => { console.log(err) });
     }, []);
+
+    React.useEffect(() => {
+
+        api.getInitialCards()
+            .then((cardList) => {
+                setCards(cardList);
+            })
+            .catch(err => { console.log(err) });
+    }, []);
+
+    function handleCardLike(card) {
+        // Проверяем, есть ли уже лайк на этой карточке
+        const isLiked = card.likes.some(i => i._id === currentUser._id);
+
+        // Отправляем запрос в API и получаем обновлённые данные карточки
+        const changeLike = isLiked ? api.deleteLikeCard(card._id) : api.likeCard(card._id)
+        changeLike.then((newCard) => {
+            setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        });
+    }
+
+    function handleCardDelete(card) {
+        api.removeCard(card._id).then(() => {
+            const newCards = cards.filter((c) => c._id !== card._id);
+            setCards(newCards);
+        })
+    }
 
     function handleEditProfileClick() {
         setIsEditProfilePopupOpen(true);
@@ -75,6 +104,17 @@ function App() {
             .catch(err => { console.log(err) });
     }
 
+    function handleAddPlaceSubmit({ name, link }) {
+        api.addCard(name, link)
+            .then((card) => {
+
+                setCards([...cards, card]);
+                setIsAddPlacePopupOpen(false);
+
+            })
+    }
+
+
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <div className='page'>
@@ -84,40 +124,33 @@ function App() {
                         onEditProfile={handleEditProfileClick}
                         onAddPlace={handleAddPlaceClick}
                         onEditAvatar={handleEditAvatarClick}
-                        onCardClick={handleCardClick} />
+                        onCardClick={handleCardClick}
+                        cards={cards}
+                        onCardLike={handleCardLike}
+                        onCardDelete={handleCardDelete} />
                 }
                 <Footer />
             </div>
 
-            {currentUser && 
+            {currentUser &&
                 <EditProfilePopup
-                isOpen={isEditProfilePopupOpen}
-                onClose={closeAllPopups}
-                onUpdateUser={handleUpdateUser} 
+                    isOpen={isEditProfilePopupOpen}
+                    onClose={closeAllPopups}
+                    onUpdateUser={handleUpdateUser}
                 />
             }
 
-            <PopupWithForm
-                name="add"
-                title="Новое место"
-                buttonText="Создать"
+            <AddPlacePopup
                 isOpen={isAddPlacePopupOpen}
-                onClose={closeAllPopups}>
-                <fieldset className="form__inputs">
-                    <input id="form_add-name" className="form__input form__input-card-name" type="text" name="name"
-                        minLength="2" maxLength="30" required placeholder="Название" />
-                    <span id="form_add-name-error" className="form__error"></span>
-                    <input id="form_add-about" className="form__input form__input-src" type="url" name="about" required
-                        placeholder="Ссылка на картинку" />
-                    <span id="form_add-about-error" className="form__error"></span>
-                </fieldset>
-            </PopupWithForm>
-
-            {currentUser && 
-                <EditAvatarPopup
-                isOpen={isEditAvatarPopupOpen}
                 onClose={closeAllPopups}
-                onUpdateAvatar={handleUpdateAvatar} 
+                onAddPlace={handleAddPlaceSubmit}
+            />
+
+            {currentUser &&
+                <EditAvatarPopup
+                    isOpen={isEditAvatarPopupOpen}
+                    onClose={closeAllPopups}
+                    onUpdateAvatar={handleUpdateAvatar}
                 />
             }
 

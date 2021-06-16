@@ -110,7 +110,7 @@ function App() {
         api.addCard(name, link)
             .then((card) => {
 
-                setCards([...cards, card]);
+                setCards([card, ...cards]);
                 setIsAddPlacePopupOpen(false);
 
             })

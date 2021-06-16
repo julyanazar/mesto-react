@@ -45,7 +45,8 @@ function App() {
         const changeLike = isLiked ? api.deleteLikeCard(card._id) : api.likeCard(card._id)
         changeLike.then((newCard) => {
             setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-        });
+        })
+            .catch(err => { console.log(err) });
     }
 
     function handleCardDelete(card) {
@@ -53,6 +54,7 @@ function App() {
             const newCards = cards.filter((c) => c._id !== card._id);
             setCards(newCards);
         })
+            .catch(err => { console.log(err) });
     }
 
     function handleEditProfileClick() {
@@ -112,6 +114,7 @@ function App() {
                 setIsAddPlacePopupOpen(false);
 
             })
+            .catch(err => { console.log(err) });
     }
 
 
